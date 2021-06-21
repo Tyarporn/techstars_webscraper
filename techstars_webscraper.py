@@ -8,6 +8,7 @@
 
 import requests
 from selenium import webdriver
+from selenium.webdriver.common.action_chains import ActionChains
 from bs4 import BeautifulSoup
 import scrapy
 import time
@@ -49,6 +50,10 @@ time.sleep(5)  # for page to load
 source = driver.page_source
 soup = BeautifulSoup(source, 'html.parser')
 # print(soup)
+driver.execute_script("window.scrollTo(0, 500)")
+time.sleep(3)
+
+
 
 # find company data from overlay
 try:
@@ -86,13 +91,15 @@ try:
     try:
         for n in names:
             time.sleep(5)
-            driver.find_element_by_xpath('//*[@id="' + n + '"]').click()
-            print("id_xpath: " + '//*[@id="' + n + '"]')
+            clickable = driver.find_element_by_xpath('//*[@id="' + n + '"]')
+            action = webdriver.common.action_chains.ActionChains(driver)
+            action.move_to_element_with_offset(clickable, 1, 1)
+            action.click()
+            action.perform()
+            print("I just clicked: " + '//*[@id="' + n + '"]')
             time.sleep(5)
             print(n + " was found")
             company_page_source = driver.page_source
-            # if n == "askneo.io":
-            #     print(company_page_source)
             company_soup = BeautifulSoup(company_page_source, 'html.parser')
             # in company profile now!
             try:
@@ -128,7 +135,7 @@ try:
 except:
     print("cards not found")
 
-# click button next?
+ # click button next?
 
 print(names)
 print(founders)
@@ -137,3 +144,21 @@ print(websites)
 print(descriptions)
 print(locations)
 print(dates)
+
+# try:
+#     id = '//*[@id="' + '1sm' + '"]'
+#     clickable = driver.find_element_by_xpath(id)
+#     print("found " + id)
+#     action = webdriver.common.action_chains.ActionChains(driver)
+#     try:
+#         action.move_to_element_with_offset(clickable, 5, 5)
+#     except:
+#         print("move to failed")
+#     action.click()
+#     action.perform()
+# except:
+#     print("I failed")
+
+
+
+
