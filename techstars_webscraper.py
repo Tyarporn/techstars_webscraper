@@ -64,20 +64,30 @@ try:
         name = company_html.find('span', class_="jss1464")
         print(name.text)
         names.append(name.text)
-        location = company_html.find('span', class_="jss1465")
-        print(location.text)
-        locations.append(location.text)
-        description = company_html.find('p', class_="jss1467")
-        print(description.text)
-        descriptions.append(description.text)
-        date = company_html.find('p', class_="jss1466")  # put in func
-        date_striped = isoDate(date.text)
-        print(date_striped)
-        dates.append(date_striped)
+        try:
+            location = company_html.find('span', class_="jss1465")
+            print(location.text)
+            locations.append(location.text)
+        except:
+            locations.append("None")
+        try:
+            description = company_html.find('p', class_="jss1467")
+            print(description.text)
+            descriptions.append(description.text)
+        except:
+            descriptions.append("None")
+        try:
+            date = company_html.find('p', class_="jss1466")  # put in func
+            date_striped = isoDate(date.text)
+            print(date_striped)
+            dates.append(date_striped)
+        except:
+            dates.append("None")
     try:
         for n in names:
             time.sleep(5)
             driver.find_element_by_xpath('//*[@id="' + n + '"]').click()
+            print("id_xpath: " + '//*[@id="' + n + '"]')
             time.sleep(5)
             print(n + " was found")
             company_page_source = driver.page_source
@@ -92,7 +102,7 @@ try:
                 founders.append(founder.text)
             except:
                 print("Founder not found")
-                founders.append(" ")
+                founders.append("None")
             try:
                 linkedin = driver.find_element_by_xpath(
                     "/html/body/div[2]/div[3]/div/div/div/div/div/div[3]/div[1]/div[3]/a[1]")
@@ -100,14 +110,14 @@ try:
                 linkedins.append(linkedin.get_attribute('href'))
             except:
                 print("linkedin not found")
-                linkedins.append(" ")
+                linkedins.append("None")
             try:
                 website = company_soup.find('a', class_="jss783")
                 print(website['href'])
                 websites.append(website['href'])
             except:
                 print("website not found")
-                websites.append(" ")
+                websites.append("None")
 
             close_button = driver.find_element_by_class_name("jss776")
             close_button.click()
